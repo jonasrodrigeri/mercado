@@ -1,0 +1,22 @@
+{
+    "name": "jonasrodrigeri/mercado",
+    "authors": [
+        {
+            "name": "Jonas Rodrigeri",
+            "email": "jonasrodrigeri@unochapeco.edu.br"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "App\\": "app",
+            "JonasRodrigeri\\Source\\": "src"
+        }
+    },
+    "require": {
+        "phpunit/phpunit": "^9.5",
+        "illuminate/database": "^8.37",
+        "twig/twig": "^3.0"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
