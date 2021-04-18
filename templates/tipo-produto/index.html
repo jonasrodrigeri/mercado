@@ -1,0 +1,55 @@
+{% extends "layout/layout.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-6">
+        <h3 class="page-header">Listar Produtos</h3>
+    </div>
+    <div class="col-lg-6 right">
+        <a href="/tipo-produto/inserir" class="btn btn-primary">
+            Inserir Produto
+        </a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <section class="panel">
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <td style="width: 40%">Produto</td>
+                            <td style="width: 40%">Tipo do Produto</td>
+                            <td style="width: 10%" class="right">Valor</td>
+                            <td style="width: 10%"></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tipoProduto in tiposProduto %}
+                        <tr>
+                            <td>{{ tipoProduto.nome }}</td>
+                            <td>{{ tipoProduto.tpr_nome }}</td>
+                            <td class="right">{{ tipoProduto.valor|number_format(2, ',', '.') }}</td>
+                            <td class="center">
+                                <a href="/tipo-produto/editar/{{ tipoProduto.id }}" class="btn btn-success"><i class="fa fa-edit"></i></a>
+                                <a href="/tipo-produto/exclui/{{ tipoProduto.id }}" class="btn btn-danger"><i class="fa fa-remove"></i></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+
+{% if (mensagem) %}
+<div class="alert alert-{{ mensagem.status }} fade in">
+    <button data-dismiss="alert" class="close close-sm" type="button">
+        <i class="icon-remove"></i>
+    </button>
+    <strong>{{ mensagem.titulo }}!</strong> {{ mensagem.mensagem }}
+</div>
+{% endif %}
+
+{% endblock %}

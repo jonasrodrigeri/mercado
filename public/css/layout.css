@@ -1,0 +1,35 @@
+.alert {
+    position: absolute;
+    float: right;
+    right: 15px;
+    bottom: 25px;
+    font-size: 16px;
+    max-width: 500px;
+}
+.alert-danger {
+    color: #C03636
+}
+.alert-warning {
+    color: #845A06
+}
+.alert-info {
+    color: #26647A
+}
+.alert-success {
+    color: #53783B
+}
+.page-header {
+    color: #393939
+}
+.left {
+    text-align: left
+}
+.center {
+    text-align: center
+}
+.right {
+    text-align: right
+}
+.btn {
+    font-weight: 800
+}

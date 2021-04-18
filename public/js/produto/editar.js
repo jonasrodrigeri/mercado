@@ -1,0 +1,1 @@
+$('[name=valor]').maskMoney({decimal: ',', thousands: '.', precision: 2});
