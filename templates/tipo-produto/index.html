@@ -18,9 +18,8 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <td style="width: 40%">Produto</td>
                             <td style="width: 40%">Tipo do Produto</td>
-                            <td style="width: 10%" class="right">Valor</td>
+                            <td style="width: 10%" class="right">Percentual de Imposto</td>
                             <td style="width: 10%"></td>
                         </tr>
                     </thead>
@@ -28,8 +27,7 @@
                         {% for tipoProduto in tiposProduto %}
                         <tr>
                             <td>{{ tipoProduto.nome }}</td>
-                            <td>{{ tipoProduto.tpr_nome }}</td>
-                            <td class="right">{{ tipoProduto.valor|number_format(2, ',', '.') }}</td>
+                            <td class="right">{{ tipoProduto.percentual_imposto|number_format(2, ',', '.') }}</td>
                             <td class="center">
                                 <a href="/tipo-produto/editar/{{ tipoProduto.id }}" class="btn btn-success"><i class="fa fa-edit"></i></a>
                                 <a href="/tipo-produto/exclui/{{ tipoProduto.id }}" class="btn btn-danger"><i class="fa fa-remove"></i></a>

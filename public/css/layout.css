@@ -2,9 +2,9 @@
     position: absolute;
     float: right;
     right: 15px;
-    bottom: 25px;
+    bottom: 15px;
     font-size: 16px;
-    max-width: 500px;
+    max-width: 600px;
 }
 .alert-danger {
     color: #C03636

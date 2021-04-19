@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use Twig\Environment;
-use App\Models\Produto;
 use App\Models\TipoProduto;
 use Illuminate\Database\Capsule\Manager;
 
@@ -35,96 +34,98 @@ class TipoProdutoController
 
     public function inserir()
     {
-        return $this->twig->render('produto/inserir.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $_SERVER['dados']]);
+        return $this->twig->render('tipo-produto/inserir.html', []);
     }
 
     public function editar($params)
     {
         if (!isset($params[1]) || empty($params[1])) {
-            return header("location: /produto");
+            return header("location: /tipo-produto");
         }
 
         $id = $params[1];
 
         try {
-            $produto = Produto::where('id', $id)->first();
+            $tipoProduto = TipoProduto::where('id', $id)->first();
         } catch (\Exception $e) {
-            $produto = [];
+            $tipoProduto = [];
         }
 
         $mensagem = $_SESSION['mensagem'];
         $_SESSION['mensagem'] = [];
 
-        return $this->twig->render('produto/editar.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $produto, 'id' => $id, 'mensagem' => $mensagem]);
+        return $this->twig->render('tipo-produto/editar.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $tipoProduto, 'id' => $id, 'mensagem' => $mensagem]);
     }
 
     public function insere()
     {
         $dados = $_POST;
 
-        $dados['valor'] = str_replace(',', '.', str_replace('.', '', $dados['valor']));
+        $dados['percentual_imposto'] = str_replace(',', '.', str_replace('.', '', $dados['percentual_imposto']));
 
-        $produto = new Produto;
-        $produto->nome = $dados['nome'];
-        $produto->valor = $dados['valor'];
-        $produto->tpr_id = $dados['tipo_produto'];
+        $tipoProduto = new TipoProduto;
+        $tipoProduto->nome = $dados['nome'];
+        $tipoProduto->percentual_imposto = $dados['percentual_imposto'];
 
         try {
-            $produto->save();
+            $tipoProduto->save();
         } catch (\Exception $e) {
-            $_SESSION['mensagem'] = ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao inserir produto'];
-            return $this->twig->render('produto/inserir.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $_POST, 'mensagem' => $_SESSION['mensagem']]);
+            $_SESSION['mensagem'] = ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao inserir tipo do produto'];
+            return $this->twig->render('tipo-produto/inserir.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $_POST, 'mensagem' => $_SESSION['mensagem']]);
         }
 
-        $_SESSION['mensagem'] = ['status' => 'success', 'titulo' => 'Sucesso', 'mensagem' => 'Produto inderido com sucesso'];
+        $_SESSION['mensagem'] = ['status' => 'success', 'titulo' => 'Sucesso', 'mensagem' => 'Tipo do produto inderido com sucesso'];
 
-        return header("location: /produto");
+        return header("location: /tipo-produto");
     }
 
     public function edita($params)
     {
         if (!isset($params[1]) || empty($params[1])) {
-            return header("location: /produto");
+            return header("location: /tipo-produto");
         }
 
         $id = $params[1];
         $dados = $_POST;
 
-        $dados['valor'] = str_replace(',', '.', str_replace('.', '', $dados['valor']));
+        $dados['percentual_imposto'] = str_replace(',', '.', str_replace('.', '', $dados['percentual_imposto']));
 
-        $produto = Produto::where('id', $id)->first();
-        $produto->nome = $dados['nome'];
-        $produto->valor = $dados['valor'];
-        $produto->tpr_id = $dados['tipo_produto'];
+        $tipoProduto = TipoProduto::where('id', $id)->first();
+        $tipoProduto->nome = $dados['nome'];
+        $tipoProduto->percentual_imposto = $dados['percentual_imposto'];
 
         try {
-            $produto->save();
+            $tipoProduto->save();
         } catch (\Exception $e) {
-            $_SESSION['mensagem'] = ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao editar produto'];
-            return $this->twig->render('produto/editar.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $produto, 'mensagem' => $_SESSION['mensagem'], 'id' => $id]);
+            $_SESSION['mensagem'] = ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao editar tipo do produto'];
+            return $this->twig->render('tipo-produto/editar.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $tipoProduto, 'mensagem' => $_SESSION['mensagem'], 'id' => $id]);
         }
 
-        $_SESSION['mensagem'] = ['status' => 'success', 'titulo' => 'Sucesso', 'mensagem' => 'Produto editado com sucesso'];
+        $_SESSION['mensagem'] = ['status' => 'success', 'titulo' => 'Sucesso', 'mensagem' => 'Tipo do produto editado com sucesso'];
 
-        return header("location: /produto");
+        return header("location: /tipo-produto");
     }
 
     public function exclui($params)
     {
         if (!isset($params[1]) || empty($params[1])) {
-            return header("location: /produto");
+            return header("location: /tipo-produto");
         }
 
         $id = $params[1];
 
         try {
-            Produto::find($id)->delete();
+            $ok = TipoProduto::find($id)->delete();
         } catch (\Exception $e) {
-            $_SESSION['mensagem'] = ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao excluir produto'];
+            $_SESSION['mensagem'] = ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao excluir tipo do produto'];
         }
 
-        $_SESSION['mensagem'] = ['status' => 'success', 'titulo' => 'Sucesso', 'mensagem' => 'Produto excluído com sucesso'];
+        if (!$ok) {
+            $_SESSION['mensagem'] = ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao excluir tipo do produto, ele já está vinculado a um produto'];
+        } else {
+            $_SESSION['mensagem'] = ['status' => 'success', 'titulo' => 'Sucesso', 'mensagem' => 'Tipo do produto excluído com sucesso'];
+        }
 
-        return header("location: /produto");
+        return header("location: /tipo-produto");
     }
 }

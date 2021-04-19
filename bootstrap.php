@@ -25,10 +25,10 @@ $router->post('/produto/edita/{id}', 'App\Controllers\ProdutoController::edita')
 
 $router->get('/tipo-produto', 'App\Controllers\TipoProdutoController::lista');
 $router->get('/tipo-produto/inserir', 'App\Controllers\TipoProdutoController::inserir');
-$router->get('/tipo-produto/editar', 'App\Controllers\TipoProdutoController::editar');
-$router->get('/tipo-produto/exclui', 'App\Controllers\TipoProdutoController::exclui');
+$router->get('/tipo-produto/editar/{id}', 'App\Controllers\TipoProdutoController::editar');
+$router->get('/tipo-produto/exclui/{id}', 'App\Controllers\TipoProdutoController::exclui');
 $router->post('/tipo-produto/insere', 'App\Controllers\TipoProdutoController::insere');
-$router->post('/tipo-produto/edita', 'App\Controllers\TipoProdutoController::edita');
+$router->post('/tipo-produto/edita/{id}', 'App\Controllers\TipoProdutoController::edita');
 
 $result = $router->handler();
 

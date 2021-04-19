@@ -3,10 +3,10 @@
 {% block content %}
 <div class="row">
     <div class="col-lg-6">
-        <h3 class="page-header">Editar Produto</h3>
+        <h3 class="page-header">Editar Tipo do Produto</h3>
     </div>
     <div class="col-lg-6 right">
-        <a href="/produto" class="btn btn-secondary">
+        <a href="/tipo-produto" class="btn btn-secondary">
             Listar Produtos
         </a>
     </div>
@@ -16,7 +16,7 @@
         <section class="panel">
             <div class="panel-body">
                 <div class="form">
-                    <form class="form-validate form-horizontal" method="post" action="/produto/edita/{{ id }}">
+                    <form class="form-validate form-horizontal" method="post" action="/tipo-produto/edita/{{ id }}">
                         <div class="form-group ">
                             <label for="nome" class="control-label col-lg-2">Nome <span class="required">*</span></label>
                             <div class="col-lg-10">
@@ -24,24 +24,9 @@
                             </div>
                         </div>
                         <div class="form-group ">
-                            <label for="tipo_produto" class="control-label col-lg-2">Tipo do Produto <span class="required">*</span></label>
+                            <label for="percentual_imposto" class="control-label col-lg-2">Percentual de Imposto <span class="required">*</span></label>
                             <div class="col-lg-10">
-                                <select class="form-control input-lg m-bot15" id="tipo_produto" name="tipo_produto" required >
-                                    <option value=""></option>
-                                    {% for tipoProduto in tiposProduto %}
-                                        {% if tipoProduto.id == dados.tpr_id %}
-                                        <option selected value="{{ tipoProduto.id }}">{{ tipoProduto.nome }}</option>
-                                        {% else %}
-                                        <option value="{{ tipoProduto.id }}">{{ tipoProduto.nome }}</option>
-                                        {% endif %}
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group ">
-                            <label for="valor" class="control-label col-lg-2">Valor <span class="required">*</span></label>
-                            <div class="col-lg-10">
-                                <input class="form-control" id="valor" name="valor" maxlength="12" type="text" value="{{ dados.valor|number_format(2, ',', '.') }}" required />
+                                <input class="form-control" id="percentual_imposto" name="percentual_imposto" maxlength="6" type="text" value="{{ dados.percentual_imposto|number_format(2, ',', '.') }}" required />
                             </div>
                         </div>
                         <div class="form-group">
@@ -51,7 +36,6 @@
                         </div>
                     </form>
                 </div>
-
             </div>
         </section>
     </div>
@@ -66,5 +50,5 @@
 </div>
 {% endif %}
 
-<script type="text/javascript" src="/js/produto/editar.js"></script>
+<script type="text/javascript" src="/js/tipo-produto/editar.js"></script>
 {% endblock %}

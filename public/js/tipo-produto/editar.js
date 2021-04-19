@@ -1,0 +1,1 @@
+$('[name=percentual_imposto]').maskMoney({decimal: ',', thousands: '.', precision: 2});

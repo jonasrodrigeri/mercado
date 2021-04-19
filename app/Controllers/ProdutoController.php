@@ -36,7 +36,7 @@ class ProdutoController
 
     public function inserir()
     {
-        return $this->twig->render('produto/inserir.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $_SERVER['dados']]);
+        return $this->twig->render('produto/inserir.html', ['tiposProduto' => TipoProduto::all()]);
     }
 
     public function editar($params)
@@ -124,7 +124,11 @@ class ProdutoController
             $_SESSION['mensagem'] = ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao excluir produto'];
         }
 
-        $_SESSION['mensagem'] = ['status' => 'success', 'titulo' => 'Sucesso', 'mensagem' => 'Produto excluído com sucesso'];
+        if (!$ok) {
+            $_SESSION['mensagem'] = ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao excluir produto, ele já está vinculado a uma venda'];
+        } else {
+            $_SESSION['mensagem'] = ['status' => 'success', 'titulo' => 'Sucesso', 'mensagem' => 'Produto excluído com sucesso'];
+        }
 
         return header("location: /produto");
     }
