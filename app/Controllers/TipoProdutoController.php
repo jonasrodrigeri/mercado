@@ -70,8 +70,8 @@ class TipoProdutoController
         try {
             $tipoProduto->save();
         } catch (\Exception $e) {
-            $_SESSION['mensagem'] = ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao inserir tipo do produto'];
-            return $this->twig->render('tipo-produto/inserir.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $_POST, 'mensagem' => $_SESSION['mensagem']]);
+            $mensagem = ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao inserir tipo do produto'];
+            return $this->twig->render('tipo-produto/inserir.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $_POST, 'mensagem' => $mensagem]);
         }
 
         $_SESSION['mensagem'] = ['status' => 'success', 'titulo' => 'Sucesso', 'mensagem' => 'Tipo do produto inderido com sucesso'];
@@ -97,8 +97,8 @@ class TipoProdutoController
         try {
             $tipoProduto->save();
         } catch (\Exception $e) {
-            $_SESSION['mensagem'] = ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao editar tipo do produto'];
-            return $this->twig->render('tipo-produto/editar.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $tipoProduto, 'mensagem' => $_SESSION['mensagem'], 'id' => $id]);
+            $mensagem = ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao editar tipo do produto'];
+            return $this->twig->render('tipo-produto/editar.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $tipoProduto, 'mensagem' => $mensagem, 'id' => $id]);
         }
 
         $_SESSION['mensagem'] = ['status' => 'success', 'titulo' => 'Sucesso', 'mensagem' => 'Tipo do produto editado com sucesso'];

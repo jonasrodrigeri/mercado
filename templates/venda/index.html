@@ -3,11 +3,11 @@
 {% block content %}
 <div class="row">
     <div class="col-lg-6">
-        <h3 class="page-header">Listar Tipos de Produtos</h3>
+        <h3 class="page-header">Listar Vendas</h3>
     </div>
     <div class="col-lg-6 right">
-        <a href="/tipo-produto/inserir" class="btn btn-primary">
-            Inserir Tipo de Produto
+        <a href="/venda/inserir" class="btn btn-primary">
+            Nova Venda
         </a>
     </div>
 </div>
@@ -18,19 +18,20 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <td style="width: 40%">Tipo do Produto</td>
-                            <td style="width: 10%" class="right">Percentual de Imposto</td>
+                            <td style="width: 40%">Venda</td>
+                            <td style="width: 10%" class="right">Total</td>
+                            <td style="width: 10%" class="right">Total Impostos</td>
                             <td style="width: 10%"></td>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for tipoProduto in tiposProduto %}
+                        {% for venda in vendas %}
                         <tr>
-                            <td>{{ tipoProduto.nome }}</td>
-                            <td class="right">{{ tipoProduto.percentual_imposto|number_format(2, ',', '.') }}</td>
+                            <td>{{ venda.nome }}</td>
+                            <td class="right">R$ {{ venda.total|number_format(2, ',', '.') }}</td>
+                            <td class="right">R$ {{ venda.total_imposto|number_format(2, ',', '.') }}</td>
                             <td class="center">
-                                <a href="/tipo-produto/editar/{{ tipoProduto.id }}" class="btn btn-success"><i class="fa fa-edit"></i></a>
-                                <a href="/tipo-produto/exclui/{{ tipoProduto.id }}" class="btn btn-danger"><i class="fa fa-remove"></i></a>
+                                <a href="/venda/visualizar/{{ venda.id }}" class="btn btn-info"><i class="fa fa-search"></i></a>
                             </td>
                         </tr>
                         {% endfor %}

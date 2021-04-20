@@ -33,3 +33,9 @@
 .btn {
     font-weight: 800
 }
+table .btn {
+    padding: 4px 12px !important;
+}
+table thead, table tfoot {
+    font-weight: bold;
+}

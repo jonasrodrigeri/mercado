@@ -1,0 +1,108 @@
+{% extends "layout/layout.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-6">
+        <h3 class="page-header">Venda</h3>
+    </div>
+    <div class="col-lg-6 right">
+        <a href="/venda" class="btn btn-secondary">
+            Listar Vendas
+        </a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-5">
+        <section class="panel">
+            <div class="panel-heading">
+                Adicionar Produtos à Lista
+            </div>
+            <div class="panel-body">
+                <div class="form">
+                    <form class="form-validate form-horizontal" method="post" action="/venda/insere">
+                        <div class="form-group">
+                            <label for="produto" class="control-label col-lg-3">Produto <span class="required">*</span></label>
+                            <div class="col-lg-9">
+                                <select class="form-control" id="produto" name="produto" required >
+                                    <option value=""></option>
+                                    {% for produto in produtos %}
+                                    <option value="{{ produto.id }}">{{ produto.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="quantidade" class="control-label col-lg-3">Quantidade <span class="required">*</span></label>
+                            <div class="col-lg-9">
+                                <input class="form-control" id="quantidade" name="quantidade" maxlength="3" type="text" required />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-offset-3 col-lg-9">
+                                <button class="btn btn-primary" type="submit">Adicionar à Lista</button>
+                                <button class="btn btn-secondary" type="button" onclick="removerItem()">Remover Último Item</button>
+                                <button class="btn btn-secondary" type="button" onclick="limparLista()">Limpar a Lista</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="col-lg-7">
+        <section class="panel">
+            <div class="panel-heading">
+                Lista de Produtos
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <td style="width: 30%">Produto</td>
+                            <td style="width: 14%" class="right">Valor</td>
+                            <td style="width: 14%" class="right">% Imposto</td>
+                            <td style="width: 14%" class="right">Quantidade</td>
+                            <td style="width: 14%" class="right">Total</td>
+                            <td style="width: 14%" class="right">Total Impostos</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for venda in vendas %}
+                        <tr>
+                            <td>{{ venda.produto }}</td>
+                            <td class="right">R$ {{ venda.valor|number_format(2, ',', '.') }}</td>
+                            <td class="right">{{ venda.percentual_imposto|number_format(2, ',', '.') }} %</td>
+                            <td class="right">{{ venda.quantidade|number_format(0, ',', '.') }}</td>
+                            <td class="right">R$ {{ venda.total|number_format(2, ',', '.') }}</td>
+                            <td class="right">R$ {{ venda.total_imposto|number_format(2, ',', '.') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>Total</td>
+                            <td class="right"></td>
+                            <td class="right"></td>
+                            <td class="right"></td>
+                            <td class="right">R$ {{ total|number_format(2, ',', '.') }}</td>
+                            <td class="right">R$ {{ impostos|number_format(2, ',', '.') }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <button style="float: right" class="btn btn-primary" type="button" onclick="finalizarVenda()">Finalizar Venda</button>
+            </div>
+        </section>
+    </div>
+</div>
+
+{% if (mensagem) %}
+<div class="alert alert-{{ mensagem.status }} fade in">
+    <button data-dismiss="alert" class="close close-sm" type="button">
+        <i class="icon-remove"></i>
+    </button>
+    <strong>{{ mensagem.titulo }}!</strong> {{ mensagem.mensagem }}
+</div>
+{% endif %}
+
+<script type="text/javascript" src="/js/venda/inserir.js"></script>
+{% endblock %}

@@ -30,6 +30,14 @@ $router->get('/tipo-produto/exclui/{id}', 'App\Controllers\TipoProdutoController
 $router->post('/tipo-produto/insere', 'App\Controllers\TipoProdutoController::insere');
 $router->post('/tipo-produto/edita/{id}', 'App\Controllers\TipoProdutoController::edita');
 
+$router->get('/venda', 'App\Controllers\VendaController::lista');
+$router->get('/venda/inserir', 'App\Controllers\VendaController::inserir');
+$router->get('/venda/visualizar/{id}', 'App\Controllers\VendaController::visualizar');
+$router->get('/venda/limpar', 'App\Controllers\VendaController::limpar');
+$router->get('/venda/finalizar', 'App\Controllers\VendaController::finalizar');
+$router->get('/venda/remover-item', 'App\Controllers\VendaController::removerItem');
+$router->post('/venda/insere', 'App\Controllers\VendaController::insere');
+
 $result = $router->handler();
 
 if (!$result) {
