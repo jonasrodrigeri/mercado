@@ -24,9 +24,9 @@
                             </div>
                         </div>
                         <div class="form-group ">
-                            <label for="tipo_produto" class="control-label col-lg-2">Tipo do Produto <span class="required">*</span></label>
+                            <label for="tpr_id" class="control-label col-lg-2">Tipo do Produto <span class="required">*</span></label>
                             <div class="col-lg-10">
-                                <select class="form-control" id="tipo_produto" name="tipo_produto" required >
+                                <select class="form-control" id="tpr_id" name="tpr_id" required >
                                     <option value=""></option>
                                     {% for tipoProduto in tiposProduto %}
                                         {% if tipoProduto.id == dados.tpr_id %}

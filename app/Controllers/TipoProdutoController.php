@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use Twig\Environment;
 use App\Models\TipoProduto;
+use Rakit\Validation\Validator;
 use Illuminate\Database\Capsule\Manager;
 
 class TipoProdutoController extends BaseController
@@ -57,6 +58,26 @@ class TipoProdutoController extends BaseController
 
         $dados['percentual_imposto'] = str_replace(',', '.', str_replace('.', '', $dados['percentual_imposto']));
 
+        $validator = new Validator([
+            'required' => ':attribute é obrigatório',
+            'max' => ':attribute não pode exceder 250 caracteres',
+        ]);
+
+        $validation = $validator->make(
+            $dados,
+            [
+                'nome' => 'required|max:250',
+                'percentual_imposto' => 'required'
+            ]
+        );
+
+        $validation->validate();
+
+        if ($validation->fails()) {
+            $mensagem = ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => implode(" | ", $this->retornaMenssagensDeErro($validation->errors()->toArray()))];
+            return $this->twig->render('tipo-produto/inserir.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $_POST, 'mensagem' => $mensagem]);
+        }
+
         $tipoProduto = new TipoProduto;
         $tipoProduto->nome = $dados['nome'];
         $tipoProduto->percentual_imposto = $dados['percentual_imposto'];
@@ -84,6 +105,26 @@ class TipoProdutoController extends BaseController
 
         $dados['percentual_imposto'] = str_replace(',', '.', str_replace('.', '', $dados['percentual_imposto']));
 
+        $validator = new Validator([
+            'required' => ':attribute é obrigatório',
+            'max' => ':attribute não pode exceder 250 caracteres',
+        ]);
+
+        $validation = $validator->make(
+            $dados,
+            [
+                'nome' => 'required|max:250',
+                'percentual_imposto' => 'required'
+            ]
+        );
+
+        $validation->validate();
+
+        if ($validation->fails()) {
+            $mensagem = ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => implode(" | ", $this->retornaMenssagensDeErro($validation->errors()->toArray()))];
+            return $this->twig->render('tipo-produto/editar.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $_POST, 'mensagem' => $mensagem, 'id' => $id]);
+        }
+
         $tipoProduto = TipoProduto::where('id', $id)->first();
         $tipoProduto->nome = $dados['nome'];
         $tipoProduto->percentual_imposto = $dados['percentual_imposto'];
@@ -92,7 +133,7 @@ class TipoProdutoController extends BaseController
             $tipoProduto->save();
         } catch (\Exception $e) {
             $mensagem = ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao editar tipo do produto'];
-            return $this->twig->render('tipo-produto/editar.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $tipoProduto, 'mensagem' => $mensagem, 'id' => $id]);
+            return $this->twig->render('tipo-produto/editar.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $_POST, 'mensagem' => $mensagem, 'id' => $id]);
         }
 
         $this->insereMessage(['status' => 'success', 'titulo' => 'Sucesso', 'mensagem' => 'Tipo do produto editado com sucesso']);

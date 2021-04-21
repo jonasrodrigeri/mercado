@@ -6,6 +6,7 @@ use Twig\Environment;
 use App\Models\Venda;
 use App\Models\Produto;
 use App\Models\VendaProduto;
+use Rakit\Validation\Validator;
 use Illuminate\Database\Capsule\Manager;
 
 class VendaController extends BaseController
@@ -83,7 +84,10 @@ class VendaController extends BaseController
             $_SESSION['impostos-vendas'] = $impostos;
         }
 
-        return $this->twig->render('venda/inserir.html', ['produtos' => Produto::all(), 'vendas' => $vendas, 'total' => $total, 'impostos' => $impostos, 'mensagem' => $this->retornaMessage()]);
+        $mensagens = $this->retornaMessage();
+        $mensagem = !empty($mensagens) ? ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => implode(" | ", $mensagens)] : [];
+
+        return $this->twig->render('venda/inserir.html', ['produtos' => Produto::all(), 'vendas' => $vendas, 'total' => $total, 'impostos' => $impostos, 'mensagem' => $mensagem]);
     }
 
     public function visualizar($params)
@@ -106,7 +110,7 @@ class VendaController extends BaseController
                 ->join('produto', 'produto.id', '=', 'venda_produto.pro_id')
                 ->join('venda', 'venda.id', '=', 'venda_produto.ven_id')
                 ->where('venda_produto.ven_id', '=', $id)
-                ->orderBy('venda_produto.id', 'asc')
+                ->orderBy('venda_produto.id', 'ASC')
                 ->get();
 
         } catch (\Exception $e) {
@@ -119,6 +123,25 @@ class VendaController extends BaseController
     public function insere()
     {
         $dados = $_POST;
+
+        $validator = new Validator([
+            'required' => ':attribute é obrigatório'
+        ]);
+
+        $validation = $validator->make(
+            $dados,
+            [
+                'produto' => 'required',
+                'quantidade' => 'required'
+            ]
+        );
+
+        $validation->validate();
+
+        if ($validation->fails()) {
+            $this->retornaMenssagensDeErro($validation->errors()->toArray(), false);
+            return header("location: /venda/inserir");
+        }
 
         if (!isset($_SESSION['vendas'])) {
             $_SESSION['vendas'] = [];
@@ -161,12 +184,6 @@ class VendaController extends BaseController
         }
 
         foreach ($_SESSION['detalhes-vendas'] as $item) {
-
-            $item['valor'] = str_replace(',', '.', str_replace('.', '', $item['valor']));
-            $item['total'] = str_replace(',', '.', str_replace('.', '', $item['total']));
-            $item['quantidade'] = str_replace(',', '.', str_replace('.', '', $item['quantidade']));
-            $item['total_imposto'] = str_replace(',', '.', str_replace('.', '', $item['total_imposto']));
-            $item['percentual_imposto'] = str_replace(',', '.', str_replace('.', '', $item['percentual_imposto']));
 
             $vendaProduto = new VendaProduto();
             $vendaProduto->valor = $item['valor'];

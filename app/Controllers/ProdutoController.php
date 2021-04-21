@@ -5,6 +5,7 @@ namespace App\Controllers;
 use Twig\Environment;
 use App\Models\Produto;
 use App\Models\TipoProduto;
+use Rakit\Validation\Validator;
 use Illuminate\Database\Capsule\Manager;
 
 class ProdutoController extends BaseController
@@ -59,6 +60,27 @@ class ProdutoController extends BaseController
 
         $dados['valor'] = str_replace(',', '.', str_replace('.', '', $dados['valor']));
 
+        $validator = new Validator([
+            'required' => ':attribute é obrigatório',
+            'max' => ':attribute não pode exceder 250 caracteres',
+        ]);
+
+        $validation = $validator->make(
+            $dados,
+            [
+                'nome' => 'required|max:250',
+                'valor' => 'required',
+                'tipo_produto' => 'required'
+            ]
+        );
+
+        $validation->validate();
+
+        if ($validation->fails()) {
+            $mensagem = ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => implode(" | ", $this->retornaMenssagensDeErro($validation->errors()->toArray()))];
+            return $this->twig->render('produto/inserir.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $_POST, 'mensagem' => $mensagem]);
+        }
+
         $produto = new Produto;
         $produto->nome = $dados['nome'];
         $produto->valor = $dados['valor'];
@@ -87,16 +109,37 @@ class ProdutoController extends BaseController
 
         $dados['valor'] = str_replace(',', '.', str_replace('.', '', $dados['valor']));
 
+        $validator = new Validator([
+            'required' => ':attribute é obrigatório',
+            'max' => ':attribute não pode exceder 250 caracteres',
+        ]);
+
+        $validation = $validator->make(
+            $dados,
+            [
+                'nome' => 'required|max:250',
+                'valor' => 'required',
+                'tpr_id' => 'required'
+            ]
+        );
+
+        $validation->validate();
+
+        if ($validation->fails()) {
+            $mensagem = ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => implode(" | ", $this->retornaMenssagensDeErro($validation->errors()->toArray()))];
+            return $this->twig->render('produto/editar.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $_POST, 'mensagem' => $mensagem, 'id' => $id]);
+        }
+
         $produto = Produto::where('id', $id)->first();
         $produto->nome = $dados['nome'];
         $produto->valor = $dados['valor'];
-        $produto->tpr_id = $dados['tipo_produto'];
+        $produto->tpr_id = $dados['tpr_id'];
 
         try {
             $produto->save();
         } catch (\Exception $e) {
             $mensagem = ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao editar produto'];
-            return $this->twig->render('produto/editar.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $produto, 'mensagem' => $mensagem, 'id' => $id]);
+            return $this->twig->render('produto/editar.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $_POST, 'mensagem' => $mensagem, 'id' => $id]);
         }
 
         $this->insereMessage(['status' => 'success', 'titulo' => 'Sucesso', 'mensagem' => 'Produto editado com sucesso']);
