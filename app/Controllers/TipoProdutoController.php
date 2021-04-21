@@ -6,7 +6,7 @@ use Twig\Environment;
 use App\Models\TipoProduto;
 use Illuminate\Database\Capsule\Manager;
 
-class TipoProdutoController
+class TipoProdutoController extends BaseController
 {
     private $twig;
 
@@ -17,9 +17,6 @@ class TipoProdutoController
 
     public function lista()
     {
-        $mensagem = $_SESSION['mensagem'];
-        $_SESSION['mensagem'] = [];
-
         try {
             $tiposProduto = Manager::table('tipo_produto')
                 ->select('tipo_produto.*')
@@ -29,7 +26,7 @@ class TipoProdutoController
             $tiposProduto = [];
         }
 
-        return $this->twig->render('tipo-produto/index.html', ['tiposProduto' => $tiposProduto, 'mensagem' => $mensagem]);
+        return $this->twig->render('tipo-produto/index.html', ['tiposProduto' => $tiposProduto, 'mensagem' => $this->retornaMessage()]);
     }
 
     public function inserir()
@@ -51,10 +48,7 @@ class TipoProdutoController
             $tipoProduto = [];
         }
 
-        $mensagem = $_SESSION['mensagem'];
-        $_SESSION['mensagem'] = [];
-
-        return $this->twig->render('tipo-produto/editar.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $tipoProduto, 'id' => $id, 'mensagem' => $mensagem]);
+        return $this->twig->render('tipo-produto/editar.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $tipoProduto, 'id' => $id, 'mensagem' => $this->retornaMessage()]);
     }
 
     public function insere()
@@ -74,7 +68,7 @@ class TipoProdutoController
             return $this->twig->render('tipo-produto/inserir.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $_POST, 'mensagem' => $mensagem]);
         }
 
-        $_SESSION['mensagem'] = ['status' => 'success', 'titulo' => 'Sucesso', 'mensagem' => 'Tipo do produto inderido com sucesso'];
+        $this->insereMessage(['status' => 'success', 'titulo' => 'Sucesso', 'mensagem' => 'Tipo do produto inderido com sucesso']);
 
         return header("location: /tipo-produto");
     }
@@ -101,7 +95,7 @@ class TipoProdutoController
             return $this->twig->render('tipo-produto/editar.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $tipoProduto, 'mensagem' => $mensagem, 'id' => $id]);
         }
 
-        $_SESSION['mensagem'] = ['status' => 'success', 'titulo' => 'Sucesso', 'mensagem' => 'Tipo do produto editado com sucesso'];
+        $this->insereMessage(['status' => 'success', 'titulo' => 'Sucesso', 'mensagem' => 'Tipo do produto editado com sucesso']);
 
         return header("location: /tipo-produto");
     }
@@ -117,13 +111,13 @@ class TipoProdutoController
         try {
             $ok = TipoProduto::find($id)->delete();
         } catch (\Exception $e) {
-            $_SESSION['mensagem'] = ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao excluir tipo do produto'];
+            $this->insereMessage(['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao excluir tipo do produto']);
         }
 
         if (!$ok) {
-            $_SESSION['mensagem'] = ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao excluir tipo do produto, ele já está vinculado a um produto'];
+            $this->insereMessage(['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao excluir tipo do produto, ele já está vinculado a um produto']);
         } else {
-            $_SESSION['mensagem'] = ['status' => 'success', 'titulo' => 'Sucesso', 'mensagem' => 'Tipo do produto excluído com sucesso'];
+            $this->insereMessage(['status' => 'success', 'titulo' => 'Sucesso', 'mensagem' => 'Tipo do produto excluído com sucesso']);
         }
 
         return header("location: /tipo-produto");

@@ -7,7 +7,7 @@ use App\Models\Produto;
 use App\Models\TipoProduto;
 use Illuminate\Database\Capsule\Manager;
 
-class ProdutoController
+class ProdutoController extends BaseController
 {
     private $twig;
 
@@ -18,9 +18,6 @@ class ProdutoController
 
     public function lista()
     {
-        $mensagem = $_SESSION['mensagem'];
-        $_SESSION['mensagem'] = [];
-
         try {
             $produtos = Manager::table('produto')
                 ->select('produto.*', 'tipo_produto.nome as tpr_nome')
@@ -31,7 +28,7 @@ class ProdutoController
             $produtos = [];
         }
 
-        return $this->twig->render('produto/index.html', ['produtos' => $produtos, 'mensagem' => $mensagem]);
+        return $this->twig->render('produto/index.html', ['produtos' => $produtos, 'mensagem' => $this->retornaMessage()]);
     }
 
     public function inserir()
@@ -53,10 +50,7 @@ class ProdutoController
             $produto = [];
         }
 
-        $mensagem = $_SESSION['mensagem'];
-        $_SESSION['mensagem'] = [];
-
-        return $this->twig->render('produto/editar.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $produto, 'id' => $id, 'mensagem' => $mensagem]);
+        return $this->twig->render('produto/editar.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $produto, 'id' => $id, 'mensagem' => $this->retornaMessage()]);
     }
 
     public function insere()
@@ -77,7 +71,7 @@ class ProdutoController
             return $this->twig->render('produto/inserir.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $_POST, 'mensagem' => $mensagem]);
         }
 
-        $_SESSION['mensagem'] = ['status' => 'success', 'titulo' => 'Sucesso', 'mensagem' => 'Produto inderido com sucesso'];
+        $this->insereMessage(['status' => 'success', 'titulo' => 'Sucesso', 'mensagem' => 'Produto inderido com sucesso']);
 
         return header("location: /produto");
     }
@@ -105,7 +99,7 @@ class ProdutoController
             return $this->twig->render('produto/editar.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $produto, 'mensagem' => $mensagem, 'id' => $id]);
         }
 
-        $_SESSION['mensagem'] = ['status' => 'success', 'titulo' => 'Sucesso', 'mensagem' => 'Produto editado com sucesso'];
+        $this->insereMessage(['status' => 'success', 'titulo' => 'Sucesso', 'mensagem' => 'Produto editado com sucesso']);
 
         return header("location: /produto");
     }
@@ -121,13 +115,13 @@ class ProdutoController
         try {
             $ok = Produto::find($id)->delete();
         } catch (\Exception $e) {
-            $_SESSION['mensagem'] = ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao excluir produto'];
+            $this->insereMessage(['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao excluir produto']);
         }
 
         if (!$ok) {
-            $_SESSION['mensagem'] = ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao excluir produto, ele já está vinculado a uma venda'];
+            $this->insereMessage(['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao excluir produto, ele já está vinculado a uma venda']);
         } else {
-            $_SESSION['mensagem'] = ['status' => 'success', 'titulo' => 'Sucesso', 'mensagem' => 'Produto excluído com sucesso'];
+            $this->insereMessage(['status' => 'success', 'titulo' => 'Sucesso', 'mensagem' => 'Produto excluído com sucesso']);
         }
 
         return header("location: /produto");

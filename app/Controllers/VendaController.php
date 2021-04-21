@@ -8,7 +8,7 @@ use App\Models\Produto;
 use App\Models\VendaProduto;
 use Illuminate\Database\Capsule\Manager;
 
-class VendaController
+class VendaController extends BaseController
 {
     private $twig;
 
@@ -19,9 +19,6 @@ class VendaController
 
     public function lista()
     {
-        $mensagem = $_SESSION['mensagem'];
-        $_SESSION['mensagem'] = [];
-
         try {
             $vendas = Manager::table('venda')
                 ->select('venda.*')
@@ -31,7 +28,7 @@ class VendaController
             $vendas = [];
         }
 
-        return $this->twig->render('venda/index.html', ['vendas' => $vendas, 'mensagem' => $mensagem]);
+        return $this->twig->render('venda/index.html', ['vendas' => $vendas, 'mensagem' => $this->retornaMessage()]);
     }
 
     public function inserir()
@@ -86,10 +83,7 @@ class VendaController
             $_SESSION['impostos-vendas'] = $impostos;
         }
 
-        $mensagem = $_SESSION['mensagem'];
-        $_SESSION['mensagem'] = [];
-
-        return $this->twig->render('venda/inserir.html', ['produtos' => Produto::all(), 'vendas' => $vendas, 'total' => $total, 'impostos' => $impostos, 'mensagem' => $mensagem]);
+        return $this->twig->render('venda/inserir.html', ['produtos' => Produto::all(), 'vendas' => $vendas, 'total' => $total, 'impostos' => $impostos, 'mensagem' => $this->retornaMessage()]);
     }
 
     public function visualizar($params)
@@ -162,7 +156,7 @@ class VendaController
             $venda->save();
         } catch (\Exception $e) {
             Manager::connection()->rollBack();
-            $_SESSION['mensagem'] = ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao finalizar venda'];
+            $this->insereMessage(['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao finalizar venda']);
             return header("location: /venda/inserir");
         }
 
@@ -187,7 +181,7 @@ class VendaController
                 $vendaProduto->save();
             } catch (\Exception $e) {
                 Manager::connection()->rollBack();
-                $_SESSION['mensagem'] = ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao finalizar venda'];
+                $this->insereMessage(['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao finalizar venda']);
                 return header("location: /venda/inserir");
             }
         }
@@ -196,12 +190,13 @@ class VendaController
             Manager::connection()->commit();
         } catch (\Exception $e) {
             Manager::connection()->rollBack();
-            $_SESSION['mensagem'] = ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao finalizar vendas'];
+            $this->insereMessage(['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao finalizar vendas']);
             return header("location: /venda/inserir");
         }
 
+        $this->insereMessage(['status' => 'success', 'titulo' => 'Sucesso', 'mensagem' => 'Venda finalizada com sucesso']);
+
         $_SESSION['vendas'] = [];
-        $_SESSION['mensagem'] = ['status' => 'success', 'titulo' => 'Sucesso', 'mensagem' => 'Venda finalizada com sucesso'];
         $_SESSION['total-vendas'] = 0;
         $_SESSION['detalhes-vendas'] = [];
         $_SESSION['impostos-vendas'] = 0;
