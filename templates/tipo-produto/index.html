@@ -3,7 +3,7 @@
 {% block content %}
 <div class="row">
     <div class="col-lg-6">
-        <h3 class="page-header">Listar Tipos de Produtos</h3>
+        <h3 class="page-header">Tipos de Produtos</h3>
     </div>
     <div class="col-lg-6 right">
         <a href="/tipo-produto/inserir" class="btn btn-primary">
@@ -18,8 +18,8 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <td style="width: 40%">Tipo do Produto</td>
-                            <td style="width: 10%" class="right">Percentual de Imposto</td>
+                            <td style="width: 70%">Tipo do Produto</td>
+                            <td style="width: 20%" class="right">Percentual de Imposto</td>
                             <td style="width: 10%"></td>
                         </tr>
                     </thead>
@@ -29,8 +29,8 @@
                             <td>{{ tipoProduto.nome }}</td>
                             <td class="right">{{ tipoProduto.percentual_imposto|number_format(2, ',', '.') }}</td>
                             <td class="center">
-                                <a href="/tipo-produto/editar/{{ tipoProduto.id }}" class="btn btn-success"><i class="fa fa-edit"></i></a>
-                                <a href="/tipo-produto/exclui/{{ tipoProduto.id }}" class="btn btn-danger"><i class="fa fa-remove"></i></a>
+                                <a href="/tipo-produto/editar/{{ tipoProduto.id }}" title="Editar" class="btn btn-success"><i class="fa fa-edit"></i></a>
+                                <a href="#" title="Excluir" onclick="excluir({{ tipoProduto.id }})" class="btn btn-danger"><i class="fa fa-remove"></i></a>
                             </td>
                         </tr>
                         {% endfor %}
@@ -50,4 +50,5 @@
 </div>
 {% endif %}
 
+<script type="text/javascript" src="/js/tipo-produto/index.js"></script>
 {% endblock %}

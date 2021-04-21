@@ -9,12 +9,8 @@ $path = $_SERVER['PATH_INFO'] ?? '/';
 
 $router = new JonasRodrigeri\Source\Router($method, $path);
 
-$router->get('/', function() {
-    return 'Olá mundo';
-});
-
-$router->get('/ola-{nome}', 'App\Controllers\HomeController::hello');
-$router->get('/users', 'App\Controllers\HomeController::listUsers');
+$router->get('/', 'App\Controllers\HomeController::index');
+$router->get('/404', 'App\Controllers\HomeController::error404');
 
 $router->get('/produto', 'App\Controllers\ProdutoController::lista');
 $router->get('/produto/inserir', 'App\Controllers\ProdutoController::inserir');
@@ -41,8 +37,7 @@ $router->post('/venda/insere', 'App\Controllers\VendaController::insere');
 $result = $router->handler();
 
 if (!$result) {
-    http_response_code(404);
-    die('Página não encontrada!');
+    return header("location: /404");
 }
 
 $twig = require(__DIR__ . '/renderer.php');

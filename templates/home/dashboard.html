@@ -1,0 +1,25 @@
+{% extends "layout/layout.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 pointer" onclick="location.href = '/produto'">
+        <div class="info-box blue-bg">
+            <i class="fa fa-cubes"></i>
+            <div class="count">Produtos</div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 pointer" onclick="location.href = '/tipo-produto'">
+        <div class="info-box dark-bg">
+            <i class="fa fa-tags"></i>
+            <div class="count">Tipos de Produtos</div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 pointer" onclick="location.href = '/venda'">
+        <div class="info-box green-bg">
+            <i class="fa fa-shopping-cart"></i>
+            <div class="count">Vendas</div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/js/home/dashboard.js"></script>
+{% endblock %}

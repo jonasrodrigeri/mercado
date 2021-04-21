@@ -39,3 +39,6 @@ table .btn {
 table thead, table tfoot {
     font-weight: bold;
 }
+.pointer {
+    cursor: pointer;
+}

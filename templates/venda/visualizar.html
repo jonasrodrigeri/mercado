@@ -30,6 +30,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% if vendaProduto|length > 0 %}
                         {% for produto in vendaProduto %}
                         <tr>
                             <td>{{ produto.produto }}</td>
@@ -40,6 +41,11 @@
                             <td class="right">R$ {{ produto.total_imposto|number_format(2, ',', '.') }}</td>
                         </tr>
                         {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="6" class="center">Nenhum Registro</td>
+                        </tr>
+                        {% endif %}
                     </tbody>
                     <tfoot>
                         <tr>
@@ -65,4 +71,6 @@
     <strong>{{ mensagem.titulo }}!</strong> {{ mensagem.mensagem }}
 </div>
 {% endif %}
+
+<script type="text/javascript" src="/js/venda/visualizar.js"></script>
 {% endblock %}

@@ -67,16 +67,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for venda in vendas %}
-                        <tr>
-                            <td>{{ venda.produto }}</td>
-                            <td class="right">R$ {{ venda.valor|number_format(2, ',', '.') }}</td>
-                            <td class="right">{{ venda.percentual_imposto|number_format(2, ',', '.') }} %</td>
-                            <td class="right">{{ venda.quantidade|number_format(0, ',', '.') }}</td>
-                            <td class="right">R$ {{ venda.total|number_format(2, ',', '.') }}</td>
-                            <td class="right">R$ {{ venda.total_imposto|number_format(2, ',', '.') }}</td>
-                        </tr>
-                        {% endfor %}
+                        {% if vendas|length > 0 %}
+                            {% for venda in vendas %}
+                            <tr>
+                                <td>{{ venda.produto }}</td>
+                                <td class="right">R$ {{ venda.valor|number_format(2, ',', '.') }}</td>
+                                <td class="right">{{ venda.percentual_imposto|number_format(2, ',', '.') }} %</td>
+                                <td class="right">{{ venda.quantidade|number_format(0, ',', '.') }}</td>
+                                <td class="right">R$ {{ venda.total|number_format(2, ',', '.') }}</td>
+                                <td class="right">R$ {{ venda.total_imposto|number_format(2, ',', '.') }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="center">Nenhum Registro</td>
+                            </tr>
+                        {% endif %}
                     </tbody>
                     <tfoot>
                         <tr>
@@ -89,7 +95,9 @@
                         </tr>
                     </tfoot>
                 </table>
-                <button style="float: right" class="btn btn-primary" type="button" onclick="finalizarVenda()">Finalizar Venda</button>
+                {% if vendas|length > 0 %}
+                    <button style="float: right" class="btn btn-primary" type="button" onclick="finalizarVenda()">Finalizar Venda</button>
+                {% endif %}
             </div>
         </section>
     </div>

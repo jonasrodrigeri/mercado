@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Models\User;
 use Twig\Environment;
 
 class HomeController
@@ -14,13 +13,13 @@ class HomeController
         $this->twig = $twig;
     }
 
-    public function hello($params)
+    public function index()
     {
-        return "Olá {$params[1]}";
+        return $this->twig->render('home/dashboard.html');
     }
 
-    public function listUsers()
+    public function error404()
     {
-        return $this->twig->render('user/index.html', ['users' => User::all()]);
+        return $this->twig->render('erro/404.html');
     }
 }

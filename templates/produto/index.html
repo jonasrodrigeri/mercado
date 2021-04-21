@@ -3,7 +3,7 @@
 {% block content %}
 <div class="row">
     <div class="col-lg-6">
-        <h3 class="page-header">Listar Produtos</h3>
+        <h3 class="page-header">Produtos</h3>
     </div>
     <div class="col-lg-6 right">
         <a href="/produto/inserir" class="btn btn-primary">
@@ -25,17 +25,23 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% if produtos|length > 0 %}
                         {% for produto in produtos %}
                         <tr>
                             <td>{{ produto.nome }}</td>
                             <td>{{ produto.tpr_nome }}</td>
                             <td class="right">{{ produto.valor|number_format(2, ',', '.') }}</td>
                             <td class="center">
-                                <a href="/produto/editar/{{ produto.id }}" class="btn btn-success"><i class="fa fa-edit"></i></a>
-                                <a href="/produto/exclui/{{ produto.id }}" class="btn btn-danger"><i class="fa fa-remove"></i></a>
+                                <a href="/produto/editar/{{ produto.id }}" title="Editar" class="btn btn-success"><i class="icon_pencil-edit"></i></a>
+                                <a href="#" title="Excluir" onclick="excluir({{ produto.id }})" class="btn btn-danger"><i class="icon_close_alt2"></i></a>
                             </td>
                         </tr>
                         {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="center">Nenhum Registro</td>
+                        </tr>
+                        {% endif %}
                     </tbody>
                 </table>
             </div>
@@ -52,4 +58,5 @@
 </div>
 {% endif %}
 
+<script type="text/javascript" src="/js/produto/index.js"></script>
 {% endblock %}
