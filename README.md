@@ -16,9 +16,9 @@ Instalando pacotes
 Bibliotecas usadas
 ------------------
 
-        "illuminate/database": "^8.37" (usada para manipulação do banco de dados)
-        "rakit/validation": "^1.4"     (usada para validação de dados)
-        "twig/twig": "^3.0"            (usada para manipulação do html)
+    "illuminate/database": "^8.37" (usada para manipulação do banco de dados)
+    "rakit/validation": "^1.4"     (usada para validação de dados)
+    "twig/twig": "^3.0"            (usada para manipulação do html)
 
 Criando banco
 -------------
