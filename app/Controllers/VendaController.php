@@ -25,7 +25,7 @@ class VendaController
         try {
             $vendas = Manager::table('venda')
                 ->select('venda.*')
-//                ->orderBy('nome', 'asc')
+                ->orderBy('id', 'asc')
                 ->get();
         } catch (\Exception $e) {
             $vendas = [];
@@ -101,15 +101,25 @@ class VendaController
         $id = $params[1];
 
         try {
-            $venda = Produto::where('id', $id)->first();
+
+            $venda = Manager::table('venda')
+                ->select('venda.nome', 'venda.total', 'venda.total_imposto')
+                ->where('venda.id', '=', $id)
+                ->first();
+
+            $vendaProduto = Manager::table('venda_produto')
+                ->select('venda_produto.*', 'produto.nome AS produto')
+                ->join('produto', 'produto.id', '=', 'venda_produto.pro_id')
+                ->join('venda', 'venda.id', '=', 'venda_produto.ven_id')
+                ->where('venda_produto.ven_id', '=', $id)
+                ->orderBy('venda_produto.id', 'asc')
+                ->get();
+
         } catch (\Exception $e) {
-            $venda = [];
+            $vendaProduto = [];
         }
 
-        $mensagem = $_SESSION['mensagem'];
-        $_SESSION['mensagem'] = [];
-
-        return $this->twig->render('venda/visualizar.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $venda, 'id' => $id, 'mensagem' => $mensagem]);
+        return $this->twig->render('venda/visualizar.html', ['vendaProduto' => $vendaProduto, 'venda' => $venda]);
     }
 
     public function insere()
@@ -123,34 +133,6 @@ class VendaController
         array_push($_SESSION['vendas'], $dados);
 
         return header("location: /venda/inserir");
-    }
-
-    public function edita($params)
-    {
-        if (!isset($params[1]) || empty($params[1])) {
-            return header("location: /venda");
-        }
-
-        $id = $params[1];
-        $dados = $_POST;
-
-        $dados['valor'] = str_replace(',', '.', str_replace('.', '', $dados['valor']));
-
-        $venda = Produto::where('id', $id)->first();
-        $venda->nome = $dados['nome'];
-        $venda->valor = $dados['valor'];
-        $venda->tpr_id = $dados['tipo_venda'];
-
-        try {
-            $venda->save();
-        } catch (\Exception $e) {
-            $mensagem = ['status' => 'danger', 'titulo' => 'Erro', 'mensagem' => 'Erro ao editar venda'];
-            return $this->twig->render('venda/editar.html', ['tiposProduto' => TipoProduto::all(), 'dados' => $venda, 'mensagem' => $mensagem, 'id' => $id]);
-        }
-
-        $_SESSION['mensagem'] = ['status' => 'success', 'titulo' => 'Sucesso', 'mensagem' => 'Produto editado com sucesso'];
-
-        return header("location: /venda");
     }
 
     public function limpar()
@@ -172,7 +154,7 @@ class VendaController
         Manager::connection()->beginTransaction();
 
         $venda = new Venda;
-        $venda->nome = "Venda_" . date('d/m/Y H:m:s');
+        $venda->nome = "Venda " . date('d/m/Y H:m:s');
         $venda->total = $_SESSION['total-vendas'];
         $venda->total_imposto = $_SESSION['impostos-vendas'];
 

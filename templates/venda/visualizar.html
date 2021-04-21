@@ -3,55 +3,55 @@
 {% block content %}
 <div class="row">
     <div class="col-lg-6">
-        <h3 class="page-header">Editar Produto</h3>
+        <h3 class="page-header">Detalhes da Venda</h3>
     </div>
     <div class="col-lg-6 right">
-        <a href="/produto" class="btn btn-secondary">
-            Listar Produtos
+        <a href="/venda" class="btn btn-secondary">
+            Listar Vendas
         </a>
     </div>
 </div>
 <div class="row">
     <div class="col-lg-12">
         <section class="panel">
+            <div class="panel-heading">
+                {{ venda.nome }}
+            </div>
             <div class="panel-body">
-                <div class="form">
-                    <form class="form-validate form-horizontal" method="post" action="/produto/edita/{{ id }}">
-                        <div class="form-group ">
-                            <label for="nome" class="control-label col-lg-2">Nome <span class="required">*</span></label>
-                            <div class="col-lg-10">
-                                <input class="form-control" id="nome" name="nome" maxlength="250" type="text" value="{{ dados.nome }}" required />
-                            </div>
-                        </div>
-                        <div class="form-group ">
-                            <label for="tipo_produto" class="control-label col-lg-2">Tipo do Produto <span class="required">*</span></label>
-                            <div class="col-lg-10">
-                                <select class="form-control" id="tipo_produto" name="tipo_produto" required >
-                                    <option value=""></option>
-                                    {% for tipoProduto in tiposProduto %}
-                                        {% if tipoProduto.id == dados.tpr_id %}
-                                        <option selected value="{{ tipoProduto.id }}">{{ tipoProduto.nome }}</option>
-                                        {% else %}
-                                        <option value="{{ tipoProduto.id }}">{{ tipoProduto.nome }}</option>
-                                        {% endif %}
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group ">
-                            <label for="valor" class="control-label col-lg-2">Valor <span class="required">*</span></label>
-                            <div class="col-lg-10">
-                                <input class="form-control" id="valor" name="valor" maxlength="12" type="text" value="{{ dados.valor|number_format(2, ',', '.') }}" required />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-lg-offset-2 col-lg-10">
-                                <button class="btn btn-primary" type="submit">Salvar</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <td style="width: 30%">Produto</td>
+                            <td style="width: 14%" class="right">Valor</td>
+                            <td style="width: 14%" class="right">% Imposto</td>
+                            <td style="width: 14%" class="right">Quantidade</td>
+                            <td style="width: 14%" class="right">Total</td>
+                            <td style="width: 14%" class="right">Total Impostos</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for produto in vendaProduto %}
+                        <tr>
+                            <td>{{ produto.produto }}</td>
+                            <td class="right">R$ {{ produto.valor|number_format(2, ',', '.') }}</td>
+                            <td class="right">{{ produto.imposto|number_format(2, ',', '.') }} %</td>
+                            <td class="right">{{ produto.quantidade|number_format(0, ',', '.') }}</td>
+                            <td class="right">R$ {{ produto.total|number_format(2, ',', '.') }}</td>
+                            <td class="right">R$ {{ produto.total_imposto|number_format(2, ',', '.') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>Total</td>
+                            <td class="right"></td>
+                            <td class="right"></td>
+                            <td class="right"></td>
+                            <td class="right">R$ {{ venda.total|number_format(2, ',', '.') }}</td>
+                            <td class="right">R$ {{ venda.total_imposto|number_format(2, ',', '.') }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
         </section>
     </div>
@@ -65,6 +65,4 @@
     <strong>{{ mensagem.titulo }}!</strong> {{ mensagem.mensagem }}
 </div>
 {% endif %}
-
-<script type="text/javascript" src="/js/produto/editar.js"></script>
 {% endblock %}
