@@ -171,7 +171,7 @@ class VendaController extends BaseController
         Manager::connection()->beginTransaction();
 
         $venda = new Venda;
-        $venda->nome = "Venda " . date('d/m/Y H:m:s');
+        $venda->nome = "Venda " . date('d/m/Y H:i:s');
         $venda->total = $_SESSION['total-vendas'];
         $venda->total_imposto = $_SESSION['impostos-vendas'];
 

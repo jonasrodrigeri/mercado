@@ -29,7 +29,7 @@
                                 <select class="form-control" id="tpr_id" name="tpr_id" required >
                                     <option value=""></option>
                                     {% for tipoProduto in tiposProduto %}
-                                        {% if tipoProduto.id == dados.tipo_produto %}
+                                        {% if tipoProduto.id == dados.tpr_id %}
                                         <option selected value="{{ tipoProduto.id }}">{{ tipoProduto.nome }}</option>
                                         {% else %}
                                         <option value="{{ tipoProduto.id }}">{{ tipoProduto.nome }}</option>

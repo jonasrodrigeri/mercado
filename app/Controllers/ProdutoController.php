@@ -70,7 +70,7 @@ class ProdutoController extends BaseController
             [
                 'nome' => 'required|max:250',
                 'valor' => 'required',
-                'tipo_produto' => 'required'
+                'tpr_id' => 'required'
             ]
         );
 
@@ -84,7 +84,7 @@ class ProdutoController extends BaseController
         $produto = new Produto;
         $produto->nome = $dados['nome'];
         $produto->valor = $dados['valor'];
-        $produto->tpr_id = $dados['tipo_produto'];
+        $produto->tpr_id = $dados['tpr_id'];
 
         try {
             $produto->save();
